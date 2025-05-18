@@ -93,7 +93,7 @@
   }
 
   body {
-    @apply bg-vibe-background-primary text-vibe-text-primary min-h-screen;
+    @apply bg-vibe-background-primary text-vibe-text-primary dark:bg-vibe-dark-background-primary dark:text-vibe-dark-text-primary min-h-screen;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -124,7 +124,7 @@
   }
 
   .calendar-day {
-    @apply relative flex items-center justify-center h-10 w-10 mx-auto rounded-full hover:bg-vibe-background-secondary transition-colors;
+    @apply relative flex items-center justify-center h-10 w-10 mx-auto rounded-full hover:bg-vibe-background-secondary dark:hover:bg-vibe-dark-background-tertiary;
   }
 
   .calendar-day.event {
@@ -132,16 +132,16 @@
   }
 
   .calendar-day.today {
-    @apply bg-vibe-accent-blue/10 text-vibe-accent-blue font-medium;
+    @apply bg-vibe-accent-blue/10 text-vibe-accent-blue dark:bg-vibe-dark-accent/20 dark:text-vibe-dark-accent font-medium;
   }
 
   .calendar-day.selected {
-    @apply bg-vibe-accent-blue text-white;
+    @apply bg-vibe-accent-blue text-white dark:bg-vibe-dark-accent dark:text-vibe-dark-background-primary;
   }
 
   .calendar-day.event::after {
     content: '';
-    @apply absolute bottom-1 h-1 w-1 rounded-full bg-vibe-accent-blue;
+    @apply absolute bottom-1 h-1 w-1 rounded-full bg-vibe-accent-blue dark:bg-vibe-dark-accent;
   }
 
   .calendar-day.event.holiday::after {
@@ -157,10 +157,23 @@
   }
 
   .sidebar-item {
-    @apply flex items-center gap-3 text-vibe-text-primary dark:text-vibe-dark-text-primary px-3 py-2 rounded-lg hover:bg-vibe-background-secondary dark:hover:bg-vibe-dark-background-secondary transition-colors;
+    @apply flex items-center gap-3 text-vibe-text-primary dark:text-vibe-dark-text-primary px-3 py-2 rounded-lg hover:bg-vibe-background-secondary dark:hover:bg-vibe-dark-background-tertiary transition-colors;
   }
 
   .sidebar-item.active {
     @apply bg-vibe-accent-blue/10 text-vibe-accent-blue dark:bg-vibe-dark-accent/20 dark:text-vibe-dark-accent;
+  }
+
+  /* Animation classes */
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+  
+  .pulse-animation {
+    @apply animate-pulse-light;
+  }
+  
+  .fade-up {
+    @apply animate-fade-in;
   }
 }

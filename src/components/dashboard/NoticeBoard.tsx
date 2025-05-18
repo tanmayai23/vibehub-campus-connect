@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ChevronDown, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface Notice {
   id: string;
@@ -48,20 +49,28 @@ interface NoticeBoardProps {
 
 const NoticeBoard: React.FC<NoticeBoardProps> = ({ className }) => {
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  const { toast } = useToast();
 
   const filteredNotices = activeFilter === "all" 
     ? notices 
     : notices.filter(notice => notice.category === activeFilter);
 
+  const handleNoticeClick = (notice: Notice) => {
+    toast({
+      title: notice.title,
+      description: `Category: ${notice.category}`,
+    });
+  };
+
   return (
-    <div className={cn("bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-4 shadow-sm", className)}>
+    <div className={cn("bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-4 shadow-sm transition-all hover-scale", className)}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-medium">Notice Board</h2>
+        <h2 className="text-lg font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">Notice Board</h2>
         <div className="relative">
           <select
             value={activeFilter}
             onChange={(e) => setActiveFilter(e.target.value)}
-            className="bg-transparent text-sm text-vibe-text-primary dark:text-vibe-dark-text-primary border border-vibe-background-tertiary dark:border-vibe-dark-background-tertiary rounded-lg py-1 pl-3 pr-8 appearance-none"
+            className="bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary text-sm text-vibe-text-primary dark:text-vibe-dark-text-primary border border-vibe-background-tertiary dark:border-vibe-dark-background-tertiary rounded-lg py-1 pl-3 pr-8 appearance-none"
           >
             <option value="all">All Notices</option>
             <option value="administrative">Administrative</option>
@@ -78,7 +87,8 @@ const NoticeBoard: React.FC<NoticeBoardProps> = ({ className }) => {
           filteredNotices.map((notice) => (
             <div
               key={notice.id}
-              className="border border-vibe-background-tertiary dark:border-vibe-dark-background-tertiary rounded-lg p-3 hover:bg-vibe-background-secondary dark:hover:bg-vibe-dark-background-tertiary transition-colors cursor-pointer"
+              className="border border-vibe-background-tertiary dark:border-vibe-dark-background-tertiary rounded-lg p-3 hover:bg-vibe-background-secondary dark:hover:bg-vibe-dark-background-tertiary transition-colors cursor-pointer animate-fade-in"
+              onClick={() => handleNoticeClick(notice)}
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -86,7 +96,7 @@ const NoticeBoard: React.FC<NoticeBoardProps> = ({ className }) => {
                     {notice.important && (
                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                     )}
-                    <h3 className="font-medium">{notice.title}</h3>
+                    <h3 className="font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">{notice.title}</h3>
                   </div>
                   <p className="text-sm text-vibe-text-secondary dark:text-vibe-dark-text-secondary">{notice.date}</p>
                 </div>

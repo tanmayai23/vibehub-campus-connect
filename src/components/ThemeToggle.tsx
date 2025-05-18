@@ -21,14 +21,16 @@ const ThemeToggle: React.FC<{
   }, []);
 
   const toggleTheme = () => {
-    if (isDarkMode) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("vibe-theme", "light");
-    } else {
+    const newIsDarkMode = !isDarkMode;
+    setIsDarkMode(newIsDarkMode);
+    
+    if (newIsDarkMode) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("vibe-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("vibe-theme", "light");
     }
-    setIsDarkMode(!isDarkMode);
   };
 
   return children({ toggleTheme, isDarkMode });
