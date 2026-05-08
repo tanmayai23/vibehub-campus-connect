@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "@/utils/authUtils";
@@ -8,177 +7,112 @@ import Calendar from "@/components/dashboard/Calendar";
 import NoticeBoard from "@/components/dashboard/NoticeBoard";
 import ChatbotButton from "@/components/dashboard/ChatbotButton";
 import ThemeToggle from "@/components/ThemeToggle";
-import { GraduationCap, Building, Users } from "lucide-react";
+import {
+  GraduationCap, Building, Users, ArrowUpRight, Sparkles, Clock,
+  PlusCircle, UserCog, Calendar as CalendarIcon, FileWarning, ScrollText, ChevronRight,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const CollegeAdmin = () => {
   const navigate = useNavigate();
+  const user = getCurrentUser();
 
   useEffect(() => {
-    const user = getCurrentUser();
-    if (!user || user.role !== "college") {
-      navigate("/login");
-    }
-  }, [navigate]);
+    if (!user || user.role !== "college") navigate("/login");
+  }, [navigate, user]);
 
-  const collegeData = [
-    { label: "Total Students", value: "1,248", icon: GraduationCap },
-    { label: "Total Faculty", value: "86", icon: Users },
-    { label: "Departments", value: "12", icon: Building },
+  const departments = [
+    { name: "Computer Science", students: 310, pct: 85, color: "from-brand-500 to-violet-500" },
+    { name: "Electrical Engineering", students: 245, pct: 70, color: "from-emerald-500 to-emerald-400" },
+    { name: "Business Administration", students: 280, pct: 75, color: "from-violet-500 to-fuchsia-500" },
+    { name: "Mechanical Engineering", students: 200, pct: 60, color: "from-amber-500 to-amber-400" },
+    { name: "Biology", students: 170, pct: 50, color: "from-rose-500 to-rose-400" },
+  ];
+
+  const actions = [
+    { label: "Create New Notice", icon: PlusCircle, tint: "emerald" as const },
+    { label: "Manage Faculty",    icon: UserCog,    tint: "brand"   as const },
+    { label: "Schedule Events",   icon: CalendarIcon, tint: "violet" as const },
+    { label: "Examination Settings", icon: ScrollText, tint: "amber" as const },
+    { label: "View Complaints",   icon: FileWarning, tint: "rose"   as const },
   ];
 
   return (
     <ThemeToggle>
       {({ toggleTheme, isDarkMode }) => (
-        <div className="flex min-h-screen bg-vibe-background-primary dark:bg-vibe-dark-background-primary">
+        <div className="flex min-h-screen bg-background">
           <Sidebar />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-w-0">
             <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
-            <div className="flex-1 p-6 overflow-y-auto">
-              <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-6">
-                  <h1 className="text-2xl font-display font-semibold text-vibe-text-primary dark:text-vibe-dark-text-primary animate-fade-in">
-                    College Administration Dashboard
-                  </h1>
-                  <div className="text-sm text-vibe-text-secondary dark:text-vibe-dark-text-secondary bg-vibe-background-secondary dark:bg-vibe-dark-background-secondary px-3 py-1 rounded-lg">
-                    Academic Year 2024-25
+            <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+              <div className="max-w-7xl mx-auto space-y-8">
+                <section className="flex items-end justify-between gap-4 flex-wrap animate-fade-in">
+                  <div>
+                    <div className="chip mb-3"><Sparkles className="w-3 h-3 text-brand-500" /> Administration</div>
+                    <h1 className="text-3xl lg:text-4xl font-display font-bold tracking-tight">
+                      Campus <span className="text-gradient-brand">Overview</span>
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1.5">Monitor and manage everything across your institution.</p>
                   </div>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-4 mb-6">
-                  {collegeData.map((item, index) => (
-                    <div 
-                      key={index}
-                      className="bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-4 shadow-sm flex items-center hover-scale"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <div className="p-3 bg-vibe-accent-green/10 dark:bg-green-800/20 rounded-lg mr-4">
-                        <item.icon className="h-6 w-6 text-vibe-accent-green dark:text-green-400" />
-                      </div>
+                  <div className="chip"><Clock className="w-3 h-3" /> Academic Year 2024–25</div>
+                </section>
+
+                <section className="grid lg:grid-cols-3 gap-4">
+                  <HeroStat label="Total Students" value="1,248" sub="+62 this semester" icon={GraduationCap} />
+                  <SupportStat label="Faculty" value="86" icon={Users} tint="brand" delta="4 new this month" />
+                  <SupportStat label="Departments" value="12" icon={Building} tint="violet" delta="All active" />
+                </section>
+
+                <section className="grid lg:grid-cols-2 gap-6">
+                  <Calendar />
+                  <NoticeBoard />
+                </section>
+
+                <section className="grid lg:grid-cols-5 gap-6">
+                  {/* Departments */}
+                  <div className="card-surface p-6 lg:col-span-3">
+                    <div className="flex items-center justify-between mb-5">
                       <div>
-                        <h3 className="text-sm font-medium text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                          {item.label}
-                        </h3>
-                        <p className="text-2xl font-semibold text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                          {item.value}
-                        </p>
+                        <h3 className="text-base font-semibold leading-tight">Department Overview</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">Enrollment by department</p>
                       </div>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                  <Calendar className="animate-fade-in" />
-                  <NoticeBoard className="animate-fade-in" />
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-6 shadow-sm transition-all hover-scale">
-                    <h3 className="text-lg font-medium mb-4 text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                      Department Overview
-                    </h3>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                            Computer Science
-                          </span>
-                          <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                            310 students
-                          </span>
-                        </div>
-                        <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                          <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: '85%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                            Electrical Engineering
-                          </span>
-                          <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                            245 students
-                          </span>
-                        </div>
-                        <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                          <div className="bg-green-500 h-2.5 rounded-full" style={{ width: '70%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                            Business Administration
-                          </span>
-                          <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                            280 students
-                          </span>
-                        </div>
-                        <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                          <div className="bg-purple-500 h-2.5 rounded-full" style={{ width: '75%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                            Mechanical Engineering
-                          </span>
-                          <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                            200 students
-                          </span>
-                        </div>
-                        <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                          <div className="bg-yellow-500 h-2.5 rounded-full" style={{ width: '60%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                            Biology
-                          </span>
-                          <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                            170 students
-                          </span>
-                        </div>
-                        <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                          <div className="bg-red-500 h-2.5 rounded-full" style={{ width: '50%' }}></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-6 shadow-sm transition-all hover-scale">
-                    <h3 className="text-lg font-medium mb-4 text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                      Administrative Actions
-                    </h3>
-                    <div className="space-y-3">
-                      <button className="w-full p-3 bg-vibe-accent-green/10 dark:bg-green-800/20 text-vibe-accent-green dark:text-green-400 rounded-lg text-left flex items-center hover:bg-vibe-accent-green/20 dark:hover:bg-green-800/30 transition-colors">
-                        <span className="flex-1">Create New Notice</span>
-                        <span>→</span>
-                      </button>
-                      <button className="w-full p-3 bg-vibe-accent-blue/10 dark:bg-blue-800/20 text-vibe-accent-blue dark:text-blue-400 rounded-lg text-left flex items-center hover:bg-vibe-accent-blue/20 dark:hover:bg-blue-800/30 transition-colors">
-                        <span className="flex-1">Manage Faculty</span>
-                        <span>→</span>
-                      </button>
-                      <button className="w-full p-3 bg-vibe-accent-purple/10 dark:bg-purple-800/20 text-vibe-accent-purple dark:text-purple-400 rounded-lg text-left flex items-center hover:bg-vibe-accent-purple/20 dark:hover:bg-purple-800/30 transition-colors">
-                        <span className="flex-1">Schedule Events</span>
-                        <span>→</span>
-                      </button>
-                      <button className="w-full p-3 bg-amber-500/10 dark:bg-amber-800/20 text-amber-500 dark:text-amber-400 rounded-lg text-left flex items-center hover:bg-amber-500/20 dark:hover:bg-amber-800/30 transition-colors">
-                        <span className="flex-1">Examination Settings</span>
-                        <span>→</span>
-                      </button>
-                      <button className="w-full p-3 bg-red-500/10 dark:bg-red-800/20 text-red-500 dark:text-red-400 rounded-lg text-left flex items-center hover:bg-red-500/20 dark:hover:bg-red-800/30 transition-colors">
-                        <span className="flex-1">View Complaints</span>
-                        <span>→</span>
+                      <button className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                        Details <ArrowUpRight className="w-3 h-3" />
                       </button>
                     </div>
+                    <div className="space-y-5">
+                      {departments.map((d) => (
+                        <div key={d.name}>
+                          <div className="flex justify-between items-baseline mb-2">
+                            <span className="text-sm font-semibold">{d.name}</span>
+                            <span className="text-xs text-muted-foreground tabular-nums">
+                              {d.students} <span className="text-muted-foreground/60">students</span>
+                              <span className="ml-2 font-bold text-foreground">{d.pct}%</span>
+                            </span>
+                          </div>
+                          <div className="h-2 rounded-full bg-muted overflow-hidden">
+                            <div className={cn("h-full bg-gradient-to-r rounded-full transition-all duration-700", d.color)} style={{ width: `${d.pct}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+
+                  {/* Quick actions */}
+                  <div className="card-surface p-6 lg:col-span-2">
+                    <div className="mb-5">
+                      <h3 className="text-base font-semibold leading-tight">Quick Actions</h3>
+                      <p className="text-xs text-muted-foreground mt-0.5">Common administrative tasks</p>
+                    </div>
+                    <div className="space-y-2">
+                      {actions.map((a) => (
+                        <ActionRow key={a.label} {...a} />
+                      ))}
+                    </div>
+                  </div>
+                </section>
               </div>
-            </div>
+            </main>
           </div>
           <ChatbotButton />
         </div>
@@ -186,5 +120,60 @@ const CollegeAdmin = () => {
     </ThemeToggle>
   );
 };
+
+const tints = {
+  emerald: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300",
+  brand:   "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300",
+  violet:  "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300",
+  amber:   "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
+  rose:    "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300",
+} as const;
+
+const ActionRow: React.FC<{ label: string; icon: React.ElementType; tint: keyof typeof tints }> = ({ label, icon: Icon, tint }) => (
+  <button className="w-full flex items-center gap-3 p-3 rounded-xl border border-border/60 hover:bg-muted/60 hover:border-border transition-all text-left group">
+    <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center shrink-0", tints[tint])}>
+      <Icon className="w-4 h-4" />
+    </div>
+    <span className="flex-1 text-sm font-semibold">{label}</span>
+    <ChevronRight className="w-4 h-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+  </button>
+);
+
+const HeroStat: React.FC<{ label: string; value: string; sub: string; icon: React.ElementType }> = ({ label, value, sub, icon: Icon }) => (
+  <div className="hero-stat p-6 animate-fade-in">
+    <div className="relative z-10 flex items-start justify-between mb-6">
+      <div>
+        <p className="text-[11px] uppercase tracking-wider font-bold text-white/70">{label}</p>
+        <p className="text-4xl font-display font-bold mt-2 tracking-tight">{value}</p>
+      </div>
+      <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/20">
+        <Icon className="w-5 h-5" />
+      </div>
+    </div>
+    <div className="relative z-10 flex items-center gap-1.5 text-xs font-medium text-white/85">
+      <ArrowUpRight className="w-3.5 h-3.5" />
+      {sub}
+    </div>
+  </div>
+);
+
+const SupportStat: React.FC<{ label: string; value: string; icon: React.ElementType; tint: "brand" | "violet"; delta: string }> = ({ label, value, icon: Icon, tint, delta }) => (
+  <div className="card-surface card-hover p-6 animate-fade-in">
+    <div className="flex items-start justify-between mb-4">
+      <div>
+        <p className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground">{label}</p>
+        <p className="text-3xl font-display font-bold mt-2 tracking-tight">{value}</p>
+      </div>
+      <div className={cn(
+        "w-10 h-10 rounded-xl flex items-center justify-center",
+        tint === "brand" ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
+                         : "bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400"
+      )}>
+        <Icon className="w-5 h-5" />
+      </div>
+    </div>
+    <p className="text-xs text-muted-foreground">{delta}</p>
+  </div>
+);
 
 export default CollegeAdmin;

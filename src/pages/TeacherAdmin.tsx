@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "@/utils/authUtils";
@@ -8,150 +7,126 @@ import Calendar from "@/components/dashboard/Calendar";
 import NoticeBoard from "@/components/dashboard/NoticeBoard";
 import ChatbotButton from "@/components/dashboard/ChatbotButton";
 import ThemeToggle from "@/components/ThemeToggle";
-import { BookOpen, FileText, Users } from "lucide-react";
+import { BookOpen, FileText, Users, ArrowUpRight, Sparkles, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const TeacherAdmin = () => {
   const navigate = useNavigate();
+  const user = getCurrentUser();
 
   useEffect(() => {
-    const user = getCurrentUser();
-    if (!user || user.role !== "teacher") {
-      navigate("/login");
-    }
-  }, [navigate]);
+    if (!user || user.role !== "teacher") navigate("/login");
+  }, [navigate, user]);
 
-  const teacherData = [
-    { label: "Courses Teaching", value: "4", icon: BookOpen },
-    { label: "Assignments to Grade", value: "12", icon: FileText },
-    { label: "Total Students", value: "127", icon: Users },
+  const firstName = user?.name.split(" ")[0] ?? "Professor";
+
+  const courses = [
+    { code: "CS301", name: "Data Structures and Algorithms", students: 42 },
+    { code: "CS302", name: "Database Systems", students: 38 },
+    { code: "CS401", name: "Advanced Algorithms", students: 24 },
+    { code: "CS501", name: "Machine Learning", students: 23 },
+  ];
+
+  const submissions = [
+    { title: "Database Design Project", submitted: 26, total: 38, color: "from-emerald-500 to-emerald-400" },
+    { title: "Algorithm Analysis", submitted: 33, total: 42, color: "from-brand-500 to-violet-500" },
+    { title: "Machine Learning Project", submitted: 15, total: 23, color: "from-amber-500 to-amber-400" },
   ];
 
   return (
     <ThemeToggle>
       {({ toggleTheme, isDarkMode }) => (
-        <div className="flex min-h-screen bg-vibe-background-primary dark:bg-vibe-dark-background-primary">
+        <div className="flex min-h-screen bg-background">
           <Sidebar />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-w-0">
             <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
-            <div className="flex-1 p-6 overflow-y-auto">
-              <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-6">
-                  <h1 className="text-2xl font-display font-semibold text-vibe-text-primary dark:text-vibe-dark-text-primary animate-fade-in">
-                    Teacher Dashboard
-                  </h1>
-                  <div className="text-sm text-vibe-text-secondary dark:text-vibe-dark-text-secondary bg-vibe-background-secondary dark:bg-vibe-dark-background-secondary px-3 py-1 rounded-lg">
-                    Academic Year 2024-25
+            <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+              <div className="max-w-7xl mx-auto space-y-8">
+                <section className="flex items-end justify-between gap-4 flex-wrap animate-fade-in">
+                  <div>
+                    <div className="chip mb-3"><Sparkles className="w-3 h-3 text-brand-500" /> Faculty Portal</div>
+                    <h1 className="text-3xl lg:text-4xl font-display font-bold tracking-tight">
+                      Welcome, {firstName}.
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1.5">Manage your courses and review pending submissions.</p>
                   </div>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-4 mb-6">
-                  {teacherData.map((item, index) => (
-                    <div 
-                      key={index}
-                      className="bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-4 shadow-sm flex items-center hover-scale"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <div className="p-3 bg-vibe-accent-purple/10 dark:bg-purple-800/20 rounded-lg mr-4">
-                        <item.icon className="h-6 w-6 text-vibe-accent-purple dark:text-purple-400" />
-                      </div>
+                  <div className="chip"><Clock className="w-3 h-3" /> Academic Year 2024–25</div>
+                </section>
+
+                <section className="grid lg:grid-cols-3 gap-4">
+                  <HeroStat label="Total Students" value="127" sub="Across 4 active courses" icon={Users} />
+                  <SupportStat label="Courses Teaching" value="4" icon={BookOpen} tint="brand" delta="Spring '25" />
+                  <SupportStat label="To Grade" value="12" icon={FileText} tint="violet" delta="3 due this week" />
+                </section>
+
+                <section className="grid lg:grid-cols-2 gap-6">
+                  <Calendar />
+                  <NoticeBoard />
+                </section>
+
+                <section className="grid lg:grid-cols-2 gap-6">
+                  <div className="card-surface p-6">
+                    <div className="flex items-center justify-between mb-5">
                       <div>
-                        <h3 className="text-sm font-medium text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                          {item.label}
-                        </h3>
-                        <p className="text-2xl font-semibold text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                          {item.value}
-                        </p>
+                        <h3 className="text-base font-semibold leading-tight">Current Courses</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">{courses.length} active classrooms</p>
+                      </div>
+                      <button className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                        Manage <ArrowUpRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                    <ul className="space-y-2.5">
+                      {courses.map((c) => (
+                        <li key={c.code} className="rounded-xl p-3 hover:bg-muted/60 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 shrink-0 rounded-lg bg-violet-50 dark:bg-violet-500/10 flex items-center justify-center text-[11px] font-bold text-violet-700 dark:text-violet-300">
+                              {c.code.slice(0, 2)}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold truncate">
+                                <span className="text-muted-foreground font-medium">{c.code}:</span> {c.name}
+                              </p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <Users className="w-3 h-3 text-muted-foreground" />
+                                <p className="text-xs text-muted-foreground">{c.students} students</p>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="card-surface p-6">
+                    <div className="flex items-center justify-between mb-5">
+                      <div>
+                        <h3 className="text-base font-semibold leading-tight">Submission Status</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">Live progress across assignments</p>
                       </div>
                     </div>
-                  ))}
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Calendar className="animate-fade-in" />
-                  <NoticeBoard className="animate-fade-in" />
-                </div>
-                
-                <div className="mt-8">
-                  <h2 className="text-xl font-semibold mb-4 text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                    Teaching Resources
-                  </h2>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-6 shadow-sm transition-all hover-scale">
-                      <h3 className="text-lg font-medium mb-4 text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                        Current Courses
-                      </h3>
-                      <ul className="space-y-3">
-                        <li className="p-3 bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-lg flex justify-between items-center">
-                          <div className="text-vibe-text-primary dark:text-vibe-dark-text-primary">CS301: Data Structures and Algorithms</div>
-                          <div className="text-sm text-vibe-text-secondary dark:text-vibe-dark-text-secondary">42 students</div>
-                        </li>
-                        <li className="p-3 bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-lg flex justify-between items-center">
-                          <div className="text-vibe-text-primary dark:text-vibe-dark-text-primary">CS302: Database Systems</div>
-                          <div className="text-sm text-vibe-text-secondary dark:text-vibe-dark-text-secondary">38 students</div>
-                        </li>
-                        <li className="p-3 bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-lg flex justify-between items-center">
-                          <div className="text-vibe-text-primary dark:text-vibe-dark-text-primary">CS401: Advanced Algorithms</div>
-                          <div className="text-sm text-vibe-text-secondary dark:text-vibe-dark-text-secondary">24 students</div>
-                        </li>
-                        <li className="p-3 bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-lg flex justify-between items-center">
-                          <div className="text-vibe-text-primary dark:text-vibe-dark-text-primary">CS501: Machine Learning</div>
-                          <div className="text-sm text-vibe-text-secondary dark:text-vibe-dark-text-secondary">23 students</div>
-                        </li>
-                      </ul>
-                    </div>
-                    
-                    <div className="bg-white dark:bg-vibe-dark-background-secondary rounded-xl p-6 shadow-sm transition-all hover-scale">
-                      <h3 className="text-lg font-medium mb-4 text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                        Assignment Status
-                      </h3>
-                      <div className="space-y-4">
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                              Database Design Project
-                            </span>
-                            <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                              26/38 submitted
-                            </span>
+                    <div className="space-y-5">
+                      {submissions.map((s) => {
+                        const pct = Math.round((s.submitted / s.total) * 100);
+                        return (
+                          <div key={s.title}>
+                            <div className="flex justify-between items-baseline mb-2">
+                              <span className="text-sm font-semibold">{s.title}</span>
+                              <span className="text-xs text-muted-foreground tabular-nums">
+                                {s.submitted}<span className="text-muted-foreground/60"> / {s.total}</span>
+                                <span className="ml-2 font-bold text-foreground">{pct}%</span>
+                              </span>
+                            </div>
+                            <div className="h-2 rounded-full bg-muted overflow-hidden">
+                              <div className={cn("h-full bg-gradient-to-r rounded-full transition-all duration-700", s.color)} style={{ width: `${pct}%` }} />
+                            </div>
                           </div>
-                          <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                            <div className="bg-green-500 h-2.5 rounded-full" style={{ width: '68%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                              Algorithm Analysis
-                            </span>
-                            <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                              33/42 submitted
-                            </span>
-                          </div>
-                          <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                            <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: '78%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-vibe-text-primary dark:text-vibe-dark-text-primary">
-                              Machine Learning Project
-                            </span>
-                            <span className="text-xs text-vibe-text-secondary dark:text-vibe-dark-text-secondary">
-                              15/23 submitted
-                            </span>
-                          </div>
-                          <div className="w-full bg-vibe-background-secondary dark:bg-vibe-dark-background-tertiary rounded-full h-2.5">
-                            <div className="bg-yellow-500 h-2.5 rounded-full" style={{ width: '65%' }}></div>
-                          </div>
-                        </div>
-                      </div>
+                        );
+                      })}
                     </div>
                   </div>
-                </div>
+                </section>
               </div>
-            </div>
+            </main>
           </div>
           <ChatbotButton />
         </div>
@@ -159,5 +134,42 @@ const TeacherAdmin = () => {
     </ThemeToggle>
   );
 };
+
+const HeroStat: React.FC<{ label: string; value: string; sub: string; icon: React.ElementType }> = ({ label, value, sub, icon: Icon }) => (
+  <div className="hero-stat p-6 animate-fade-in">
+    <div className="relative z-10 flex items-start justify-between mb-6">
+      <div>
+        <p className="text-[11px] uppercase tracking-wider font-bold text-white/70">{label}</p>
+        <p className="text-4xl font-display font-bold mt-2 tracking-tight">{value}</p>
+      </div>
+      <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/20">
+        <Icon className="w-5 h-5" />
+      </div>
+    </div>
+    <div className="relative z-10 flex items-center gap-1.5 text-xs font-medium text-white/85">
+      <ArrowUpRight className="w-3.5 h-3.5" />
+      {sub}
+    </div>
+  </div>
+);
+
+const SupportStat: React.FC<{ label: string; value: string; icon: React.ElementType; tint: "brand" | "violet"; delta: string }> = ({ label, value, icon: Icon, tint, delta }) => (
+  <div className="card-surface card-hover p-6 animate-fade-in">
+    <div className="flex items-start justify-between mb-4">
+      <div>
+        <p className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground">{label}</p>
+        <p className="text-3xl font-display font-bold mt-2 tracking-tight">{value}</p>
+      </div>
+      <div className={cn(
+        "w-10 h-10 rounded-xl flex items-center justify-center",
+        tint === "brand" ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
+                         : "bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400"
+      )}>
+        <Icon className="w-5 h-5" />
+      </div>
+    </div>
+    <p className="text-xs text-muted-foreground">{delta}</p>
+  </div>
+);
 
 export default TeacherAdmin;

@@ -1,73 +1,112 @@
-# Welcome to your Lovable project
+# VibeHub — Campus Connect
 
-## Project info
+A comprehensive digital platform designed to enhance college life. VibeHub brings together students, teachers, and college administrators in one unified workspace — with dashboards, notice boards, calendars, an AI chatbot assistant, and role-based admin panels.
 
-**URL**: https://lovable.dev/projects/b6e05e7f-e1e4-431e-bedf-0031e5658ed6
+**Live site:** https://vibehub.com
+**Repository:** https://github.com/tanmayai23/vibehub-campus-connect
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **Role-based dashboards** for students, teachers, and college admins
+- **Notice board** for campus-wide announcements
+- **Calendar** for academic events, deadlines, and schedules
+- **AI chatbot assistant** for instant help and queries
+- **Settings panel** with theme toggle (light / dark mode)
+- **Modern UI** built with shadcn/ui + Tailwind CSS
+- **Responsive layout** — works across desktop, tablet, and mobile
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b6e05e7f-e1e4-431e-bedf-0031e5658ed6) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## Tech Stack
 
-**Use your preferred IDE**
+- **Vite** — lightning-fast build tooling
+- **React 18** + **TypeScript**
+- **Tailwind CSS** + **shadcn/ui** for the design system
+- **React Router** for client-side routing
+- **TanStack Query** for data fetching & caching
+- **React Hook Form** + **Zod** for forms and validation
+- **Lucide** icons
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) 18+ and npm
+
+### Install & run locally
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# 1. Clone the repo
+git clone https://github.com/tanmayai23/vibehub-campus-connect.git
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Move into the project
+cd vibehub-campus-connect
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 3. Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Start the dev server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The dev server runs on http://localhost:8080.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Available scripts
 
-**Use GitHub Codespaces**
+| Command           | What it does                           |
+| ----------------- | -------------------------------------- |
+| `npm run dev`     | Start the local dev server             |
+| `npm run build`   | Build the production bundle to `dist/` |
+| `npm run preview` | Preview the production build locally   |
+| `npm run lint`    | Run ESLint across the codebase         |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## Project Structure
 
-This project is built with:
+```
+vibehub-campus-connect/
+├── public/                 # Static assets (favicon, robots.txt)
+├── src/
+│   ├── components/
+│   │   ├── dashboard/      # Calendar, NoticeBoard, ChatbotButton, ...
+│   │   ├── layout/         # Sidebar, Header
+│   │   └── ui/             # shadcn/ui primitives
+│   ├── pages/
+│   │   ├── student/        # Student-side pages
+│   │   ├── Index.tsx       # Main dashboard
+│   │   ├── Login.tsx
+│   │   ├── StudentAdmin.tsx
+│   │   ├── TeacherAdmin.tsx
+│   │   └── CollegeAdmin.tsx
+│   ├── index.css           # Global styles & Tailwind layers
+│   └── main.tsx            # App entry point
+├── index.html
+├── tailwind.config.ts
+├── vite.config.ts
+└── package.json
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/b6e05e7f-e1e4-431e-bedf-0031e5658ed6) and click on Share -> Publish.
+The app is deployed at **https://vibehub.com**.
 
-## Can I connect a custom domain to my Lovable project?
+To deploy your own instance, push this repo to any platform that supports Vite static builds (Vercel, Netlify, Cloudflare Pages, etc.). The build command is `npm run build` and the output directory is `dist`.
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+---
+
+## License
+
+This project is private. All rights reserved © VibeHub.
