@@ -2,7 +2,7 @@
 
 A comprehensive digital platform designed to enhance college life. VibeHub brings together students, teachers, and college administrators in one unified workspace — with dashboards, notice boards, calendars, an AI chatbot assistant, and role-based admin panels.
 
-**Live site:** https://vibehub.com
+**Live site:** https://vibehub-liard.vercel.app
 **Repository:** https://github.com/tanmayai23/vibehub-campus-connect
 
 ---
@@ -95,9 +95,9 @@ vibehub-campus-connect/
 
 ## Deployment
 
-The app is deployed at **https://vibehub.com**.
+The app is deployed on Vercel at **https://vibehub-liard.vercel.app**.
 
-To deploy your own instance, push this repo to any platform that supports Vite static builds (Vercel, Netlify, Cloudflare Pages, etc.). The build command is `npm run build` and the output directory is `dist`.
+Pushes to the `main` branch on GitHub auto-deploy through Vercel's GitHub integration. The build command is `npm run build` and the output directory is `dist`.
 
 ---
 
